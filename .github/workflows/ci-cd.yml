@@ -35,12 +35,22 @@ jobs:
         run: |
           python -m py_compile app.py
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3
+  script: |
+            if [ ! -d ~/Habit-Tracker ]; then
+              git clone https://ramakrishnanallaganchuram-hash:${{ secrets.GH_PAT }}@github.com/ramakrishnanallaganchuram-hash/Habit-Tracker.git ~/Habit-Tracker
+              cd ~/Habit-Tracker
+              python3 -m venv venv
+              source venv/bin/activate
+              pip install flask
+            fi
+            cd ~/Habit-Tracker
+            git pull https://ramakrishnanallaganchuram-hash:${{ secrets.GH_PAT }}@github.com/ramakrishnanallaganchuram-hash/Habit-Tracker.git main
+            pkill -f "python app.py" || true
+            source venv/bin/activate
+            pip install flask
+            setsid nohup python app.py > app.log 2>&1 < /dev/null &
+            sleep 2
+            echo "App started successfully"
         with:
           host: "65.2.3.208"
           username: "ubuntu"
