@@ -47,12 +47,14 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             if [ ! -d ~/Habit-Tracker ]; then
-              git clone https://github.com/ramakrishnanallagnchuram-hash/Habit-Tracker.git ~/Habit-Tracker
+              git clone https://ramakrishnanallaganchuram-hash:${{ secrets.GH_PAT }}@github.com/ramakrishnanallaganchuram-hash/Habit-Tracker.git ~/Habit-Tracker
               cd ~/Habit-Tracker
               python3 -m venv venv
+              source venv/bin/activate
+              pip install flask
             fi
             cd ~/Habit-Tracker
-            git pull origin main
+            git pull https://ramakrishnanallaganchuram-hash:${{ secrets.GH_PAT }}@github.com/ramakrishnanallaganchuram-hash/Habit-Tracker.git main
             pkill -f "python app.py" || true
             source venv/bin/activate
             pip install flask
