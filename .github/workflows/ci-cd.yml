@@ -46,8 +46,14 @@ jobs:
           username: "ubuntu"
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            cd ~/habit_tracker/Habit-tracker
+            if [ ! -d ~/Habit-Tracker ]; then
+              git clone https://github.com/YOUR_USERNAME/Habit-Tracker.git ~/Habit-Tracker
+              cd ~/Habit-Tracker
+              python3 -m venv venv
+            fi
+            cd ~/Habit-Tracker
             git pull origin main
             pkill -f "python app.py" || true
             source venv/bin/activate
+            pip install flask
             nohup python app.py > app.log 2>&1 &
