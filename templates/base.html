@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Tracker</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
+nav { background: #1a1a2e; padding: 15px 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+nav h1 { color: #7c6af7; font-size: 1.5rem; margin-right: auto; }
+nav a { color: #aaa; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+nav a:hover, nav a.active { background: #7c6af7; color: white; }
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+.card { background: #1a1a2e; border-radius: 12px; padding: 24px; margin-bottom: 20px; border: 1px solid #2a2a45; }
+h2 { color: #7c6af7; margin-bottom: 20px; font-size: 1.4rem; }
+h3 { color: #a0a0c0; margin-bottom: 12px; }
+.btn { display: inline-block; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+.btn-primary { background: #7c6af7; color: white; }
+.btn-primary:hover { background: #6a59e0; }
+.btn-success { background: #2ecc71; color: white; }
+.btn-success:hover { background: #27ae60; }
+.btn-danger { background: #e74c3c; color: white; }
+.btn-danger:hover { background: #c0392b; }
+.btn-outline { background: transparent; border: 2px solid #7c6af7; color: #7c6af7; }
+.btn-outline:hover { background: #7c6af7; color: white; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.badge-urgent { background: #e74c3c; color: white; }
+.badge-high { background: #e67e22; color: white; }
+.badge-medium { background: #3498db; color: white; }
+.badge-low { background: #2ecc71; color: white; }
+.badge-streak { background: #f39c12; color: white; }
+input, select, textarea { background: #0f0f1a; border: 2px solid #2a2a45; color: #e0e0e0; padding: 10px 14px; border-radius: 8px; font-size: 0.95rem; width: 100%; margin-bottom: 14px; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #7c6af7; }
+label { display: block; color: #aaa; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.stat-box { background: #0f0f1a; border-radius: 10px; padding: 20px; text-align: center; border: 1px solid #2a2a45; }
+.stat-box .num { font-size: 2.5rem; font-weight: 700; color: #7c6af7; }
+.stat-box .label { color: #888; font-size: 0.85rem; margin-top: 5px; }
+.progress-bar { background: #0f0f1a; border-radius: 20px; height: 10px; overflow: hidden; margin-top: 8px; }
+.progress-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, #7c6af7, #2ecc71); transition: width 0.5s; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; background: #2a2a45; color: #aaa; margin-right: 5px; }
+.overdue { border-left: 4px solid #e74c3c !important; }
+.completed-item { opacity: 0.5; text-decoration: line-through; }
+form { display: inline; }
+@media(max-width:768px) { .grid-2 { grid-template-columns: 1fr; } nav { flex-wrap: wrap; gap: 10px; } }
+</style>
+</head>
+<body>
+<nav>
+  <h1>🎯 HabitFlow</h1>
+  <a href="/" {% if request.endpoint=='index' %}class="active"{% endif %}>Dashboard</a>
+  <a href="/habits" {% if request.endpoint=='habits' %}class="active"{% endif %}>Habits</a>
+  <a href="/tasks" {% if request.endpoint=='tasks' %}class="active"{% endif %}>Tasks</a>
+  <a href="/calendar" {% if request.endpoint=='calendar_view' %}class="active"{% endif %}>Calendar</a>
+  <a href="/summary" {% if request.endpoint=='weekly_summary' %}class="active"{% endif %}>Summary</a>
+</nav>
+<div class="container">
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>

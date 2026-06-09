@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📊 Today's Dashboard — {{ today.strftime('%A, %B %d %Y') }}</h2>
+
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="stat-box">
+    <div class="num">{{ habits|length }}</div>
+    <div class="label">Active Habits</div>
+  </div>
+  <div class="stat-box">
+    <div class="num">{{ completed_today_ids|length }}</div>
+    <div class="label">Habits Done Today</div>
+  </div>
+</div>
+
+{% if overdue_tasks %}
+<div class="card" style="border-left: 4px solid #e74c3c;">
+  <h2>⚠️ Overdue Tasks ({{ overdue_tasks|length }})</h2>
+  {% for task in overdue_tasks %}
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0f0f1a; border-radius:8px; margin-bottom:8px;">
+    <div>
+      <span class="badge badge-{{ task.priority }}">{{ task.priority.upper() }}</span>
+      <strong style="margin-left:10px">{{ task.title }}</strong>
+      <span style="color:#e74c3c; font-size:0.8rem; margin-left:8px">Due {{ task.due_date }}</span>
+    </div>
+    <form action="/task/complete/{{ task.id }}" method="POST">
+      <button class="btn btn-success btn-sm" style="padding:5px 12px;font-size:0.8rem">✓ Done</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>✅ Today's Habits</h2>
+  {% for habit in habits %}
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:#0f0f1a; border-radius:8px; margin-bottom:10px; {% if habit.id in completed_today_ids %}opacity:0.7;border-left:4px solid #2ecc71{% endif %}">
+    <div>
+      <strong>{{ habit.name }}</strong>
+      <span class="badge badge-streak" style="margin-left:10px">🔥 {{ habit.streak }}</span>
+      {% if habit.description %}<div style="color:#888;font-size:0.8rem;margin-top:3px">{{ habit.description }}</div>{% endif %}
+    </div>
+    <form action="/habit/complete/{{ habit.id }}" method="POST">
+      <button class="btn {% if habit.id in completed_today_ids %}btn-outline{% else %}btn-success{% endif %}" style="padding:7px 16px">
+        {% if habit.id in completed_today_ids %}↩ Undo{% else %}✓ Complete{% endif %}
+      </button>
+    </form>
+  </div>
+  {% else %}
+  <p style="color:#888">No habits yet. <a href="/habit/add" style="color:#7c6af7">Add your first habit →</a></p>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <h2>📋 Tasks Due Today</h2>
+  {% for task in tasks_due_today %}
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0f0f1a; border-radius:8px; margin-bottom:8px;">
+    <div>
+      <span class="badge badge-{{ task.priority }}">{{ task.priority.upper() }}</span>
+      <strong style="margin-left:10px">{{ task.title }}</strong>
+      <span class="tag">{{ task.category }}</span>
+    </div>
+    <form action="/task/complete/{{ task.id }}" method="POST">
+      <button class="btn btn-success" style="padding:5px 14px">✓</button>
+    </form>
+  </div>
+  {% else %}
+  <p style="color:#888">No tasks due today! 🎉</p>
+  {% endfor %}
+  <a href="/task/add" class="btn btn-primary" style="margin-top:10px">+ Add Task</a>
+</div>
+{% endblock %}

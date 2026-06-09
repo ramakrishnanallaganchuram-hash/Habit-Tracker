@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+  <h2>📋 Tasks</h2>
+  <a href="/task/add" class="btn btn-primary">+ New Task</a>
+</div>
+{% for task in tasks %}
+<div class="card {% if task.due_date and task.due_date < today %}overdue{% endif %}">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div style="flex:1">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="badge badge-{{ task.priority }}">{{ task.priority.upper() }}</span>
+        <strong style="font-size:1.05rem">{{ task.title }}</strong>
+        <span class="tag">{{ task.category }}</span>
+        {% if task.due_date and task.due_date < today %}
+          <span style="color:#e74c3c;font-size:0.8rem">⚠️ Overdue: {{ task.due_date }}</span>
+        {% elif task.due_date %}
+          <span style="color:#888;font-size:0.8rem">📅 Due: {{ task.due_date }}</span>
+        {% endif %}
+      </div>
+      {% if task.description %}<p style="color:#888;font-size:0.9rem">{{ task.description }}</p>{% endif %}
+    </div>
+    <div style="display:flex;gap:8px;margin-left:15px">
+      <form action="/task/complete/{{ task.id }}" method="POST">
+        <button class="btn btn-success" style="padding:7px 14px">✓ Done</button>
+      </form>
+      <form action="/task/delete/{{ task.id }}" method="POST" onsubmit="return confirm('Delete task?')">
+        <button class="btn btn-danger" style="padding:7px 14px">✕</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center;padding:40px;color:#888">All caught up! No pending tasks 🎉</div>
+{% endfor %}
+
+{% if completed_tasks %}
+<div class="card" style="margin-top:30px">
+  <h2>✅ Recently Completed</h2>
+  {% for task in completed_tasks %}
+  <div class="completed-item" style="padding:8px;border-bottom:1px solid #2a2a45">
+    <span class="badge badge-{{ task.priority }}" style="opacity:0.6">{{ task.priority }}</span>
+    <span style="margin-left:10px">{{ task.title }}</span>
+    <span style="color:#888;font-size:0.8rem;margin-left:10px">{{ task.completed_at.strftime('%b %d') if task.completed_at }}</span>
+    <form action="/task/delete/{{ task.id }}" method="POST" style="float:right">
+      <button class="btn" style="padding:2px 8px;font-size:0.75rem;background:#2a2a45;color:#888;border:none;cursor:pointer">✕</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

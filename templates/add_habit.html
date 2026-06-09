@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:500px;margin:0 auto">
+  <h2>➕ New Habit</h2>
+  <form method="POST">
+    <label>Habit Name *</label>
+    <input type="text" name="name" required placeholder="e.g. Morning meditation">
+    <label>Description</label>
+    <textarea name="description" rows="3" placeholder="What does this habit involve?"></textarea>
+    <label>Frequency</label>
+    <select name="frequency">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="weekdays">Weekdays Only</option>
+    </select>
+    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px">Create Habit</button>
+    <a href="/habits" class="btn btn-outline" style="width:100%;margin-top:10px;text-align:center;display:block">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:500px;margin:0 auto">
+  <h2>➕ New Task</h2>
+  <form method="POST">
+    <label>Task Title *</label>
+    <input type="text" name="title" required placeholder="What needs to be done?">
+    <label>Description</label>
+    <textarea name="description" rows="3" placeholder="Additional details..."></textarea>
+    <label>Priority</label>
+    <select name="priority">
+      <option value="low">🟢 Low</option>
+      <option value="medium" selected>🔵 Medium</option>
+      <option value="high">🟠 High</option>
+      <option value="urgent">🔴 Urgent</option>
+    </select>
+    <label>Due Date</label>
+    <input type="date" name="due_date" value="{{ today }}">
+    <label>Category</label>
+    <input type="text" name="category" placeholder="e.g. Work, Personal, Health" value="general">
+    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px">Add Task</button>
+    <a href="/tasks" class="btn btn-outline" style="width:100%;margin-top:10px;text-align:center;display:block">Cancel</a>
+  </form>
+</div>
+{% endblock %}

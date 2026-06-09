@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📊 Weekly Summary</h2>
+<p style="color:#888;margin-bottom:20px">{{ week_start.strftime('%B %d') }} – {{ week_end.strftime('%B %d, %Y') }}</p>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px">
+  <div class="stat-box">
+    <div class="num">{{ tasks_completed|length }}</div>
+    <div class="label">Tasks Completed</div>
+  </div>
+  <div class="stat-box">
+    <div class="num">{{ tasks_pending|length }}</div>
+    <div class="label">Tasks Pending</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:#e74c3c">{{ overdue }}</div>
+    <div class="label">Overdue Tasks</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🔁 Habit Performance This Week</h2>
+  {% for item in habit_data %}
+  <div style="margin-bottom:20px;padding:15px;background:#0f0f1a;border-radius:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <strong>{{ item.habit.name }}</strong>
+        <span class="badge badge-streak" style="margin-left:10px">🔥 {{ item.habit.streak }}</span>
+      </div>
+      <span style="color:{% if item.rate>=70 %}#2ecc71{% elif item.rate>=40 %}#f39c12{% else %}#e74c3c{% endif %};font-weight:700">{{ item.rate }}%</span>
+    </div>
+    <div class="progress-bar" style="margin-top:10px">
+      <div class="progress-fill" style="width:{{ item.rate }}%;background:{% if item.rate>=70 %}#2ecc71{% elif item.rate>=40 %}#f39c12{% else %}#e74c3c{% endif %}"></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      {% for d in week_days %}
+      <div style="flex:1;text-align:center">
+        <div style="font-size:0.65rem;color:#888">{{ d.strftime('%a') }}</div>
+        <div style="width:28px;height:28px;border-radius:50%;background:{% if d in item.completed_days %}#2ecc71{% else %}#2a2a45{% endif %};margin:3px auto;display:flex;align-items:center;justify-content:center;font-size:0.7rem">{% if d in item.completed_days %}✓{% endif %}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <p style="color:#888">No habits tracked yet.</p>
+  {% endfor %}
+</div>
+
+{% if tasks_completed %}
+<div class="card">
+  <h2>✅ Completed Tasks This Week</h2>
+  {% for task in tasks_completed %}
+  <div style="padding:8px;border-bottom:1px solid #2a2a45;opacity:0.8">
+    <span class="badge badge-{{ task.priority }}">{{ task.priority }}</span>
+    <span style="margin-left:10px">{{ task.title }}</span>
+    <span style="float:right;color:#888;font-size:0.8rem">{{ task.completed_at.strftime('%a %b %d') if task.completed_at }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

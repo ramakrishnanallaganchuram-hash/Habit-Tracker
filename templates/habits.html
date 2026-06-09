@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+  <h2>🔁 My Habits</h2>
+  <a href="/habit/add" class="btn btn-primary">+ New Habit</a>
+</div>
+{% for habit in habits %}
+<div class="card" style="{% if habit.id in completed_today_ids %}border-left:4px solid #2ecc71{% else %}border-left:4px solid #7c6af7{% endif %}">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div style="flex:1">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <h3 style="color:white;margin:0">{{ habit.name }}</h3>
+        <span class="badge badge-streak">🔥 {{ habit.streak }} day streak</span>
+        <span class="tag">{{ habit.frequency }}</span>
+      </div>
+      {% if habit.description %}<p style="color:#888;font-size:0.9rem;margin-bottom:10px">{{ habit.description }}</p>{% endif %}
+      <div style="display:flex;gap:20px;font-size:0.85rem;color:#888">
+        <span>Longest streak: <strong style="color:#f39c12">{{ habit.longest_streak }}</strong></span>
+        <span>Since: {{ habit.created_at.strftime('%b %d, %Y') }}</span>
+        <span>Total: {{ habit.completions|length }} completions</span>
+      </div>
+      <div class="progress-bar" style="margin-top:12px">
+        <div class="progress-fill" style="width:{{ [habit.streak * 14, 100]|min }}%"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-left:20px">
+      <form action="/habit/complete/{{ habit.id }}" method="POST">
+        <button class="btn {% if habit.id in completed_today_ids %}btn-outline{% else %}btn-success{% endif %}">
+          {% if habit.id in completed_today_ids %}✓ Done{% else %}Mark Done{% endif %}
+        </button>
+      </form>
+      <form action="/habit/delete/{{ habit.id }}" method="POST" onsubmit="return confirm('Delete this habit?')">
+        <button class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center;padding:50px">
+  <p style="font-size:3rem">🎯</p>
+  <p style="color:#888;margin:10px 0">No habits yet. Start building better habits today!</p>
+  <a href="/habit/add" class="btn btn-primary">Create First Habit</a>
+</div>
+{% endfor %}
+{% endblock %}
