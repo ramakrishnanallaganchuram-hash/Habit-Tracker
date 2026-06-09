@@ -47,7 +47,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             if [ ! -d ~/Habit-Tracker ]; then
-              git clone https://github.com/YOUR_USERNAME/Habit-Tracker.git ~/Habit-Tracker
+              git clone https://github.com/ramakrishnanallagnchuram-hash/Habit-Tracker.git ~/Habit-Tracker
               cd ~/Habit-Tracker
               python3 -m venv venv
             fi
