@@ -59,3 +59,5 @@ jobs:
             source venv/bin/activate
             pip install flask
             nohup python app.py > app.log 2>&1 &
+            disown
+            echo "App started successfully"
