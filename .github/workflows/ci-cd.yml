@@ -46,18 +46,9 @@ jobs:
           username: "ubuntu"
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            if [ ! -d ~/Habit-Tracker ]; then
-              git clone https://ramakrishnanallaganchuram-hash:${{ secrets.GH_PAT }}@github.com/ramakrishnanallaganchuram-hash/Habit-Tracker.git ~/Habit-Tracker
-              cd ~/Habit-Tracker
-              python3 -m venv venv
-              source venv/bin/activate
-              pip install flask
-            fi
-            cd ~/Habit-Tracker
+            cd /home/ubuntu/Habit-Tracker
             git pull https://ramakrishnanallaganchuram-hash:${{ secrets.GH_PAT }}@github.com/ramakrishnanallaganchuram-hash/Habit-Tracker.git main
-            pkill -f "python app.py" || true
             source venv/bin/activate
             pip install flask
-            setsid nohup python app.py > app.log 2>&1 < /dev/null &
-            sleep 2
-            echo "App started successfully"
+            sudo systemctl restart habittracker
+            echo "App deployed successfully"
